@@ -14,6 +14,8 @@ const stripeOptions = ["Yes, I have one", "Yes, I\u2019ll set one up", "I need h
 export default function ApplyPage() {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [form, setForm] = useState({
@@ -81,10 +83,27 @@ export default function ApplyPage() {
   };
   const back = () => setStep(step - 1);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validateStep(4)) return;
-    console.log("Application submitted:", form);
-    setSubmitted(true);
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      const res = await fetch("/api/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setSubmitError(data.error || "Something went wrong. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setSubmitError("Network error. Please check your connection and try again.");
+      setSubmitting(false);
+    }
   };
 
   const inputClass = "w-full px-4 py-3 bg-[#111827] border border-[#1e293b] rounded-lg text-white placeholder-[#555] focus:outline-none focus:border-[#f5a623] transition text-sm";
@@ -418,10 +437,21 @@ export default function ApplyPage() {
                 <button onClick={back} className="px-8 py-3 text-white font-bold rounded-lg hover:bg-[#111827] transition">
                   &larr; Back
                 </button>
-                <button onClick={handleSubmit} className="px-8 py-3 bg-[#f5a623] text-[#07090c] font-bold rounded-lg hover:bg-[#e09515] transition">
-                  Submit Application
+                <button
+                  onClick={handleSubmit}
+                  disabled={submitting}
+                  className={`px-8 py-3 font-bold rounded-lg transition ${
+                    submitting
+                      ? "bg-[#888] text-[#07090c] cursor-not-allowed"
+                      : "bg-[#f5a623] text-[#07090c] hover:bg-[#e09515]"
+                  }`}
+                >
+                  {submitting ? "Submitting..." : "Submit Application"}
                 </button>
               </div>
+              {submitError && (
+                <p className="text-[#e84545] text-sm text-center mt-4">{submitError}</p>
+              )}
             </motion.div>
           )}
         </AnimatePresence>

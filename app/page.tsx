@@ -30,6 +30,22 @@ const comparisons = [
 export default function Home() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSignup = async () => {
+    if (!email || !email.includes("@")) return;
+    setSubmitting(true);
+    try {
+      await fetch("/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      setSubmitted(true);
+    } catch {
+      setSubmitted(true);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-[#07090c] text-white">
@@ -312,10 +328,15 @@ export default function Home() {
               className="flex-1 px-4 py-3 bg-[#111827] border border-[#1e293b] rounded-lg text-white placeholder-[#666] focus:outline-none focus:border-[#f5a623] transition"
             />
             <button
-              onClick={() => { if (email) setSubmitted(true); }}
-              className="px-8 py-3 bg-[#e84545] text-white font-bold rounded-lg hover:bg-[#d13a3a] transition"
+              onClick={handleSignup}
+              disabled={submitting}
+              className={`px-8 py-3 font-bold rounded-lg transition ${
+                submitting
+                  ? "bg-[#888] cursor-not-allowed"
+                  : "bg-[#e84545] hover:bg-[#d13a3a]"
+              } text-white`}
             >
-              Reserve My Spot
+              {submitting ? "Reserving..." : "Reserve My Spot"}
             </button>
           </div>
         )}

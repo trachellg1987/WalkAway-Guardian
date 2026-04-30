@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       cancel_url: "https://walkaway-guardian.vercel.app/?canceled=true",
     });
 
-    return NextResponse.redirect(session.url!, 303);
+    return NextResponse.json({ url: session.url });
   } catch (err) {
     console.error("[checkout]", err);
     return NextResponse.json({ error: "Checkout failed" }, { status: 500 });

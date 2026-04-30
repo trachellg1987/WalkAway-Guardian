@@ -37,10 +37,10 @@ async function startCheckout(priceId: string) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ priceId }),
-    redirect: "follow",
   });
-  if (res.redirected) {
-    window.location.href = res.url;
+  const data = await res.json();
+  if (data.url) {
+    window.location.href = data.url;
   }
 }
 

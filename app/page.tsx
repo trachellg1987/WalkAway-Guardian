@@ -39,6 +39,10 @@ async function startCheckout(priceId: string) {
     body: JSON.stringify({ priceId }),
   });
   const data = await res.json();
+  if (!res.ok || data.error) {
+    console.error("[checkout error]", data.error ?? res.status);
+    return;
+  }
   if (data.url) {
     window.location.href = data.url;
   }

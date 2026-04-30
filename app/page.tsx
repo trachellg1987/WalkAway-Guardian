@@ -27,10 +27,29 @@ const comparisons = [
   { other: "Manage your risk with our checklist.", wag: "We watch your real P&L on your real platform and act when the number you set is hit. No checklist. No willpower." },
 ];
 
+const PRICES = {
+  monthly: "price_1TRzTrKndva1otC7ghuJGPx7",
+  annual: "price_1TRzV1Kndva1otC7tAC86sY4",
+};
+
+async function startCheckout(priceId: string) {
+  const res = await fetch("/api/checkout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ priceId }),
+    redirect: "follow",
+  });
+  if (res.redirected) {
+    window.location.href = res.url;
+  }
+}
+
 export default function Home() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [showPlanModal, setShowPlanModal] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
 
   const handleSignup = async () => {
     if (!email || !email.includes("@")) return;
@@ -250,9 +269,12 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <button className="w-full py-3 border border-white rounded-lg hover:bg-white hover:text-[#07090c] transition font-bold">
+            <a
+              href="#"
+              className="block w-full py-3 border border-white rounded-lg hover:bg-white hover:text-[#07090c] transition font-bold text-center"
+            >
               Install Free
-            </button>
+            </a>
           </div>
           <div className="bg-[#111827] border-2 border-[#f5a623] rounded-xl p-8 relative">
             <div className="absolute -top-3 right-6 bg-[#f5a623] text-[#07090c] text-xs font-bold px-3 py-1 rounded-full">
@@ -269,9 +291,45 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <button className="w-full py-3 bg-[#f5a623] text-[#07090c] rounded-lg hover:bg-[#e09515] transition font-bold">
-              Start Pro
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShowPlanModal((v) => !v)}
+                className="w-full py-3 bg-[#f5a623] text-[#07090c] rounded-lg hover:bg-[#e09515] transition font-bold"
+              >
+                Start Pro
+              </button>
+              {showPlanModal && (
+                <div className="absolute bottom-full mb-2 left-0 right-0 bg-[#1e293b] border border-[#f5a623]/40 rounded-xl overflow-hidden shadow-xl z-10">
+                  <button
+                    onClick={async () => {
+                      setCheckoutLoading("monthly");
+                      await startCheckout(PRICES.monthly);
+                      setCheckoutLoading(null);
+                    }}
+                    disabled={checkoutLoading !== null}
+                    className="w-full px-5 py-4 text-left hover:bg-[#f5a623]/10 transition disabled:opacity-50"
+                  >
+                    <p className="font-bold text-white">Monthly</p>
+                    <p className="text-sm text-[#b0b0b0]">$9.99 / month</p>
+                    {checkoutLoading === "monthly" && <p className="text-xs text-[#f5a623] mt-1">Redirecting…</p>}
+                  </button>
+                  <div className="border-t border-[#f5a623]/20" />
+                  <button
+                    onClick={async () => {
+                      setCheckoutLoading("annual");
+                      await startCheckout(PRICES.annual);
+                      setCheckoutLoading(null);
+                    }}
+                    disabled={checkoutLoading !== null}
+                    className="w-full px-5 py-4 text-left hover:bg-[#f5a623]/10 transition disabled:opacity-50"
+                  >
+                    <p className="font-bold text-white">Annual <span className="text-xs bg-[#f5a623] text-[#07090c] font-bold px-2 py-0.5 rounded-full ml-1">SAVE 33%</span></p>
+                    <p className="text-sm text-[#b0b0b0]">$79.99 / year ($6.67/mo)</p>
+                    {checkoutLoading === "annual" && <p className="text-xs text-[#f5a623] mt-1">Redirecting…</p>}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>

@@ -408,7 +408,7 @@ export default function Home() {
       <footer className="px-6 py-10 text-center text-[#666] text-sm border-t border-[#1e293b]">
         <p>&copy; 2026 Walk-Away Guardian</p>
         <div className="mt-2 space-x-4">
-          <a href="#" className="hover:text-white transition">Privacy Policy</a>
+          <a href="/privacy-policy" className="hover:text-white transition">Privacy Policy</a>
           <a href="#" className="hover:text-white transition">Terms</a>
           <a href="#" className="hover:text-white transition">Contact</a>
         </div>

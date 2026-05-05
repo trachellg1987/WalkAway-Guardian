@@ -113,6 +113,29 @@ export default function Home() {
         </motion.div>
       </section>
 
+      {/* Promo Video */}
+      <section className="px-6 py-16 max-w-4xl mx-auto">
+        <motion.div
+          className="relative rounded-2xl overflow-hidden border border-[#1e293b] shadow-2xl bg-[#111827]"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+        >
+          {/* OPTION A: swap src for YouTube embed URL e.g. https://www.youtube.com/embed/VIDEO_ID */}
+          {/* OPTION B: self-hosted — place promo.mov in /public and this will work as-is */}
+          <video
+            src="/promo.mov"
+            className="w-full aspect-video object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            controls
+          />
+        </motion.div>
+      </section>
+
       {/* Problem */}
       <section className="px-6 py-20 max-w-6xl mx-auto">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>

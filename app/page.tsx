@@ -280,8 +280,8 @@ export default function Home() {
             Journaling doesn&apos;t stop the next click. A hard lockout does.
           </p>
           <p>
-            This is the tool I wish existed three years ago. I&apos;m building it in
-            public, with a small group of Founding Creators who&apos;ve lived this
+            This is the tool I wish existed three years ago. It&apos;s live now, and I&apos;m
+            growing it with a small group of Founding Creators who&apos;ve lived this
             pain. If that&apos;s you, I&apos;d like to hear from you.
           </p>
           <p className="text-white font-medium">&mdash; Trachell, Founder</p>
@@ -378,8 +378,8 @@ export default function Home() {
           Are You a Trading Creator? Read This.
         </h2>
         <p className="text-[#b0b0b0] mb-6 text-lg">
-          I&apos;m recruiting <span className="text-white font-bold">25 Founding Creators</span> before
-          public launch. Not 250. Twenty-five.
+          The extension is live. I&apos;m looking for <span className="text-white font-bold">25 Founding Creators</span> to
+          help grow it. Not 250. Twenty-five.
         </p>
         <div className="text-left bg-[#111827] border border-[#1e293b] rounded-xl p-8 mb-6">
           <ul className="space-y-3 text-[#b0b0b0]">

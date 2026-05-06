@@ -456,6 +456,7 @@ export default function Home() {
           <a href="/privacy-policy" className="hover:text-white transition">Privacy Policy</a>
           <a href="#" className="hover:text-white transition">Terms</a>
           <a href="#" className="hover:text-white transition">Contact</a>
+          <a href="/manage" className="hover:text-white transition">Manage Subscription</a>
         </div>
       </footer>
     </main>

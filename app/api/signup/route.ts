@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { redis, SIGNUP_KEY, SIGNUP_LIMIT } from "@/lib/redis";
 
 export async function POST(req: NextRequest) {
   try {
@@ -6,6 +7,13 @@ export async function POST(req: NextRequest) {
 
     if (!email || !email.includes("@")) {
       return NextResponse.json({ error: "Valid email required" }, { status: 400 });
+    }
+
+    const count = await redis.incr(SIGNUP_KEY);
+
+    if (count > SIGNUP_LIMIT) {
+      await redis.decr(SIGNUP_KEY);
+      return NextResponse.json({ error: "List is full" }, { status: 409 });
     }
 
     const founderEmail = process.env.FOUNDER_EMAIL || "founder@walkawayguardian.com";
@@ -27,11 +35,11 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({
           from: "Walk-Away Guardian <onboarding@resend.dev>",
           to: founderEmail,
-          subject: `New Early Access Signup: ${email}`,
+          subject: `New Signup #${count}: ${email}`,
           html: `
             <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
               <div style="background: #07090c; padding: 20px; border-radius: 12px;">
-                <h2 style="color: #f5a623; margin: 0 0 12px;">New Early Access Signup</h2>
+                <h2 style="color: #f5a623; margin: 0 0 12px;">New Signup #${count} of ${SIGNUP_LIMIT}</h2>
                 <p style="color: #b0b0b0; margin: 0 0 4px; font-size: 13px;">Email:</p>
                 <p style="color: #ffffff; margin: 0 0 16px; font-size: 16px;"><a href="mailto:${email}" style="color: #f5a623;">${email}</a></p>
                 <p style="color: #666; margin: 0; font-size: 12px;">${timestamp}</p>
@@ -40,11 +48,9 @@ export async function POST(req: NextRequest) {
           `,
         }),
       });
-    } else {
-      console.log("Early access signup:", email, timestamp);
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, count });
   } catch (error) {
     console.error("Signup error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

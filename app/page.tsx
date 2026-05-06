@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const features = [
@@ -54,6 +54,15 @@ export default function Home() {
   const [submitting, setSubmitting] = useState(false);
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+  const [signupCount, setSignupCount] = useState(0);
+  const [listFull, setListFull] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/signup-count")
+      .then((r) => r.json())
+      .then((d) => { setSignupCount(d.count); setListFull(d.full); })
+      .catch(() => {});
+  }, []);
 
   const handleSignup = async () => {
     if (!email || !email.includes("@")) return;
@@ -390,12 +399,22 @@ export default function Home() {
         <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
           Get 50% Off Pro
         </h2>
-        <p className="text-[#b0b0b0] mb-8 text-lg">
+        <p className="text-[#b0b0b0] mb-4 text-lg">
           The extension is live. Join the list and lock in{" "}
           <span className="text-[#f5a623] font-bold">50% off your first year of Pro</span> — available to the first{" "}
           <span className="text-white font-bold">500 subscribers</span>.
         </p>
-        {submitted ? (
+        {!listFull && signupCount > 0 && (
+          <p className="text-sm text-[#666] mb-6">
+            <span className="text-white font-bold">{500 - signupCount}</span> spots remaining
+          </p>
+        )}
+        {listFull ? (
+          <div className="bg-[#111827] border border-[#1e293b] rounded-xl p-8">
+            <p className="text-xl font-bold text-white">This offer is now closed.</p>
+            <p className="text-[#b0b0b0] mt-2">All 500 spots have been claimed. Follow along for future offers.</p>
+          </div>
+        ) : submitted ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}

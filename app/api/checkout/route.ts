@@ -35,8 +35,8 @@ export async function POST(req: NextRequest) {
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: "https://walkaway-guardian.vercel.app/?success=true",
-      cancel_url: "https://walkaway-guardian.vercel.app/?canceled=true",
+      success_url: "https://walkaway-guardian.vercel.app/success?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "https://walkaway-guardian.vercel.app/",
     });
 
     return NextResponse.json({ url: session.url });

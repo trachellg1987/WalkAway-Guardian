@@ -105,7 +105,7 @@ export default function Home() {
           transition={{ delay: 0.8, duration: 0.8 }}
         >
           <a href="#email" className="px-8 py-4 bg-[#e84545] text-white font-bold rounded-lg hover:bg-[#d13a3a] transition text-center">
-            Get Early Access
+            Claim 50% Off Pro
           </a>
           <a href="#founders" className="px-8 py-4 border-2 border-[#f5a623] text-[#f5a623] font-bold rounded-lg hover:bg-[#f5a623] hover:text-[#07090c] transition text-center">
             Become a Founding Creator
@@ -388,11 +388,12 @@ export default function Home() {
       {/* Email Capture */}
       <section id="email" className="px-6 py-20 max-w-2xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-          Get Notified at Launch
+          Get 50% Off Pro
         </h2>
         <p className="text-[#b0b0b0] mb-8 text-lg">
-          Join the early access list. The first <span className="text-white font-bold">500 signups</span> get{" "}
-          <span className="text-[#f5a623] font-bold">50% off</span> their first year of Pro.
+          The extension is live. Join the list and lock in{" "}
+          <span className="text-[#f5a623] font-bold">50% off your first year of Pro</span> — available to the first{" "}
+          <span className="text-white font-bold">500 subscribers</span>.
         </p>
         {submitted ? (
           <motion.div
@@ -400,8 +401,8 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-[#111827] border border-[#f5a623] rounded-xl p-8"
           >
-            <p className="text-xl font-bold text-[#f5a623]">You&apos;re on the list!</p>
-            <p className="text-[#b0b0b0] mt-2">We&apos;ll notify you at launch.</p>
+            <p className="text-xl font-bold text-[#f5a623]">You&apos;re in!</p>
+            <p className="text-[#b0b0b0] mt-2">Check your inbox — your 50% off code is on its way.</p>
           </motion.div>
         ) : (
           <div className="flex flex-col sm:flex-row gap-3">
@@ -421,7 +422,7 @@ export default function Home() {
                   : "bg-[#e84545] hover:bg-[#d13a3a]"
               } text-white`}
             >
-              {submitting ? "Reserving..." : "Reserve My Spot"}
+              {submitting ? "Locking in..." : "Lock In 50% Off"}
             </button>
           </div>
         )}

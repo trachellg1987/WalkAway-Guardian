@@ -125,7 +125,7 @@ export default function Home() {
           {/* OPTION A: swap src for YouTube embed URL e.g. https://www.youtube.com/embed/VIDEO_ID */}
           {/* OPTION B: self-hosted — place promo.mov in /public and this will work as-is */}
           <video
-            src="/promo.mov"
+            src="/promo.mp4"
             className="w-full aspect-video object-cover"
             autoPlay
             muted

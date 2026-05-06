@@ -58,8 +58,22 @@ function SuccessContent() {
           </p>
 
           <div className="bg-[#111827] border border-[#1e293b] rounded-xl p-8 text-left space-y-6">
+
             <div>
-              <p className="text-xs text-[#666] uppercase tracking-wider mb-2">Step 1 — Copy your activation key</p>
+              <p className="text-xs text-[#666] uppercase tracking-wider mb-3">Step 1 — Install the extension</p>
+              <a
+                href="https://chromewebstore.google.com/detail/walk-away-guardian/bibfcgaelfchadimoiepnecdlgbjeeef"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-3 bg-[#e84545] hover:bg-[#d13a3a] text-white font-bold rounded-lg transition text-sm"
+              >
+                Add to Chrome — it&apos;s free
+              </a>
+              <p className="text-xs text-[#666] mt-2">Already installed? Skip to step 2.</p>
+            </div>
+
+            <div>
+              <p className="text-xs text-[#666] uppercase tracking-wider mb-2">Step 2 — Copy your activation key</p>
               <div className="flex items-center gap-3">
                 <code className="flex-1 bg-[#07090c] border border-[#1e293b] rounded-lg px-4 py-3 text-[#f5a623] text-sm font-mono break-all">
                   {subscriptionId}
@@ -74,7 +88,7 @@ function SuccessContent() {
             </div>
 
             <div>
-              <p className="text-xs text-[#666] uppercase tracking-wider mb-3">Step 2 — Paste it into the extension</p>
+              <p className="text-xs text-[#666] uppercase tracking-wider mb-3">Step 3 — Activate Pro</p>
               <ol className="space-y-2 text-[#b0b0b0] text-sm">
                 <li className="flex gap-3"><span className="text-[#f5a623] font-bold flex-shrink-0">1.</span> Click the Walk-Away Guardian icon in your Chrome toolbar</li>
                 <li className="flex gap-3"><span className="text-[#f5a623] font-bold flex-shrink-0">2.</span> Open <span className="text-white font-medium">Settings</span></li>

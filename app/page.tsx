@@ -306,7 +306,9 @@ export default function Home() {
               ))}
             </ul>
             <a
-              href="#"
+              href="https://chromewebstore.google.com/detail/walk-away-guardian/bibfcgaelfchadimoiepnecdlgbjeeef"
+              target="_blank"
+              rel="noopener noreferrer"
               className="block w-full py-3 border border-white rounded-lg hover:bg-white hover:text-[#07090c] transition font-bold text-center"
             >
               Install Free

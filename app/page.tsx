@@ -108,16 +108,21 @@ export default function Home() {
           Handled.
         </motion.p>
         <motion.div
-          className="mt-10 flex flex-col sm:flex-row gap-4"
+          className="mt-10 flex flex-col items-center gap-3"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.8 }}
         >
-          <a href="#email" className="px-8 py-4 bg-[#e84545] text-white font-bold rounded-lg hover:bg-[#d13a3a] transition text-center">
-            Claim 50% Off Pro
+          <a
+            href="https://chromewebstore.google.com/detail/walk-away-guardian/bibfcgaelfchadimoiepnecdlgbjeeef"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-8 py-4 bg-[#e84545] text-white font-bold rounded-lg hover:bg-[#d13a3a] transition text-center"
+          >
+            Install Free — No Credit Card Needed
           </a>
-          <a href="#founders" className="px-8 py-4 border-2 border-[#f5a623] text-[#f5a623] font-bold rounded-lg hover:bg-[#f5a623] hover:text-[#07090c] transition text-center">
-            Become a Founding Creator
+          <a href="#email" className="px-8 py-3 border border-[#f5a623] text-[#f5a623] font-semibold rounded-lg hover:bg-[#f5a623]/10 transition text-center text-sm">
+            Claim 50% Off Pro
           </a>
         </motion.div>
       </section>

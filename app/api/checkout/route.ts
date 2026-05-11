@@ -26,17 +26,24 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { priceId } = await req.json();
+    const { priceId, utm = {} } = await req.json();
 
     if (!priceId || !ALLOWED_PRICE_IDS.has(priceId)) {
       return NextResponse.json({ error: "Invalid price ID: " + priceId }, { status: 400 });
     }
+
+    // Store UTM params as Stripe metadata so every order is attributable
+    const metadata: Record<string, string> = {};
+    if (utm.utm_source)   metadata.utm_source   = String(utm.utm_source).slice(0, 500);
+    if (utm.utm_medium)   metadata.utm_medium   = String(utm.utm_medium).slice(0, 500);
+    if (utm.utm_campaign) metadata.utm_campaign = String(utm.utm_campaign).slice(0, 500);
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: "https://walkaway-guardian.vercel.app/success?session_id={CHECKOUT_SESSION_ID}",
       cancel_url: "https://walkaway-guardian.vercel.app/",
+      ...(Object.keys(metadata).length > 0 && { metadata }),
     });
 
     return NextResponse.json({ url: session.url });

@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { track } from "@vercel/analytics/react";
+
+const CHROME_STORE_BASE =
+  "https://chromewebstore.google.com/detail/walk-away-guardian/bibfcgaelfchadimoiepnecdlgbjeeef";
 
 const features = [
   { icon: "\u{1F512}", title: "Loss Lockout", desc: "Hit your daily loss threshold and your trading platform is overlaid with a lock screen. The trade button is unreachable. No exceptions." },
@@ -32,11 +36,11 @@ const PRICES = {
   annual: "price_1TRzV1Kndva1otC7tAC86sY4",
 };
 
-async function startCheckout(priceId: string) {
+async function startCheckout(priceId: string, utm: Record<string, string> = {}) {
   const res = await fetch("/api/checkout", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ priceId }),
+    body: JSON.stringify({ priceId, utm }),
   });
   const data = await res.json();
   if (!res.ok || data.error) {
@@ -56,6 +60,7 @@ export default function Home() {
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [signupCount, setSignupCount] = useState(0);
   const [listFull, setListFull] = useState(false);
+  const [utm, setUtm] = useState<Record<string, string>>({});
 
   useEffect(() => {
     fetch("/api/signup-count")
@@ -63,6 +68,22 @@ export default function Home() {
       .then((d) => { setSignupCount(d.count); setListFull(d.full); })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    const source = p.get("utm_source");
+    if (source) {
+      setUtm({
+        utm_source: source,
+        utm_medium: p.get("utm_medium") ?? "",
+        utm_campaign: p.get("utm_campaign") ?? "",
+      });
+    }
+  }, []);
+
+  const chromeStoreUrl = utm.utm_source
+    ? `${CHROME_STORE_BASE}?${new URLSearchParams(utm).toString()}`
+    : CHROME_STORE_BASE;
 
   const handleSignup = async () => {
     if (!email || !email.includes("@")) return;
@@ -114,14 +135,19 @@ export default function Home() {
           transition={{ delay: 0.8, duration: 0.8 }}
         >
           <a
-            href="https://chromewebstore.google.com/detail/walk-away-guardian/bibfcgaelfchadimoiepnecdlgbjeeef"
+            href={chromeStoreUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => track("install_click", { location: "hero", ...utm })}
             className="px-8 py-4 bg-[#e84545] text-white font-bold rounded-lg hover:bg-[#d13a3a] transition text-center"
           >
             Install Free — No Credit Card Needed
           </a>
-          <a href="#email" className="px-8 py-3 border border-[#f5a623] text-[#f5a623] font-semibold rounded-lg hover:bg-[#f5a623]/10 transition text-center text-sm">
+          <a
+            href="#email"
+            onClick={() => track("promo_click", { location: "hero", ...utm })}
+            className="px-8 py-3 border border-[#f5a623] text-[#f5a623] font-semibold rounded-lg hover:bg-[#f5a623]/10 transition text-center text-sm"
+          >
             Claim 50% Off Pro
           </a>
         </motion.div>
@@ -311,9 +337,10 @@ export default function Home() {
               ))}
             </ul>
             <a
-              href="https://chromewebstore.google.com/detail/walk-away-guardian/bibfcgaelfchadimoiepnecdlgbjeeef"
+              href={chromeStoreUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => track("install_click", { location: "pricing", ...utm })}
               className="block w-full py-3 border border-white rounded-lg hover:bg-white hover:text-[#07090c] transition font-bold text-center"
             >
               Install Free
@@ -345,8 +372,9 @@ export default function Home() {
                 <div className="absolute bottom-full mb-2 left-0 right-0 bg-[#1e293b] border border-[#f5a623]/40 rounded-xl overflow-hidden shadow-xl z-10">
                   <button
                     onClick={async () => {
+                      track("checkout_start", { plan: "monthly", ...utm });
                       setCheckoutLoading("monthly");
-                      await startCheckout(PRICES.monthly);
+                      await startCheckout(PRICES.monthly, utm);
                       setCheckoutLoading(null);
                     }}
                     disabled={checkoutLoading !== null}
@@ -359,8 +387,9 @@ export default function Home() {
                   <div className="border-t border-[#f5a623]/20" />
                   <button
                     onClick={async () => {
+                      track("checkout_start", { plan: "annual", ...utm });
                       setCheckoutLoading("annual");
-                      await startCheckout(PRICES.annual);
+                      await startCheckout(PRICES.annual, utm);
                       setCheckoutLoading(null);
                     }}
                     disabled={checkoutLoading !== null}

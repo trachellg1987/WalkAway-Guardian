@@ -141,7 +141,36 @@ export async function POST(req: NextRequest) {
         }),
       });
 
-      await Promise.all([notifyPromise, welcomePromise]);
+      // Add contact to Resend contacts list
+      const contactPromise = fetch("https://api.resend.com/contacts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${resendKey}`,
+        },
+        body: JSON.stringify({
+          email,
+          unsubscribed: false,
+        }),
+      });
+
+      // Trigger user.signed_up event to fire Resend Automation
+      const eventPromise = fetch("https://api.resend.com/events/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${resendKey}`,
+        },
+        body: JSON.stringify({
+          event: "user.signed_up",
+          email,
+          payload: {
+            signup_number: count,
+          },
+        }),
+      });
+
+      await Promise.all([notifyPromise, welcomePromise, contactPromise, eventPromise]);
     }
 
     return NextResponse.json({ success: true, count });

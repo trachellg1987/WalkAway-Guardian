@@ -141,18 +141,18 @@ export async function POST(req: NextRequest) {
         }),
       });
 
-      // Add contact to Resend contacts list
-      const contactPromise = fetch("https://api.resend.com/contacts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${resendKey}`,
-        },
-        body: JSON.stringify({
-          email,
-          unsubscribed: false,
-        }),
-      });
+      // Upsert contact into the Resend audience (appears in Audience > Contacts view)
+      const audienceId = process.env.RESEND_AUDIENCE_ID;
+      const contactPromise = audienceId
+        ? fetch(`https://api.resend.com/audiences/${audienceId}/contacts`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${resendKey}`,
+            },
+            body: JSON.stringify({ email, unsubscribed: false }),
+          })
+        : Promise.resolve();
 
       // Trigger user.signed_up event to fire Resend Automation
       const eventPromise = fetch("https://api.resend.com/events/send", {

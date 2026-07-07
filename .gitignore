@@ -4,3 +4,9 @@ node_modules/
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+analytics/output/*.json
+analytics/output/*.png
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.DS_Store
